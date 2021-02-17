@@ -1,5 +1,6 @@
 var myArray = []
 var count = 0;
+var correct = 0;
 var paused = false;
 
 
@@ -14,6 +15,7 @@ function fetchQuestions() {
         },
         complete: () => {
             buildQuestion(myArray)
+            document.querySelector('#title').textContent = 'Trivia'
         }
     });
 }
@@ -85,6 +87,9 @@ function buildQuestion(){
     }
 
     function changeButtons() {
+        if (this.id == 'answer' || this.textContent.trim() == answer) {
+            correct++;
+        }
         document.querySelectorAll('.btn.container-fluid').forEach(a => {
             if (a.id == 'answer' || a.textContent.trim() == answer) {
                 a.style.transition
@@ -106,10 +111,13 @@ function buildQuestion(){
 
 function next() {
     count++;
+    document.querySelector("#title").textContent = `${correct}/${count}`;
     try {
         buildQuestion(myArray);
     } catch (error) {
+        alert(`You got ${correct}/${count}`)
         count = 0;
+        correct = 0;
         fetchQuestions();
     }
     document.querySelector("#nextButton").style.display = 'none';
